@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+	<moboAccount messageType="32000045"><!--/*  微信解绑  */-->
+	<reqData>
+		<openID th:text="${openID}"></openID>
+	</reqData>
+</moboAccount>
+
