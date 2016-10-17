@@ -4,12 +4,11 @@ import com.google.common.base.Throwables;
 import me.ruby.common.exception.BusinessException;
 import me.ruby.tea.Constants;
 import me.ruby.tea.wechat.api.dto.ApiRespData;
-import me.ruby.tea.wechat.api.dto.TemplateData;
-import me.ruby.tea.wechat.api.dto.TemplateMessage;
 import me.ruby.tea.wechat.api.manager.WXAccessTokenManager;
-import me.ruby.tea.wechat.api.service.MerchantBindService;
 import me.ruby.tea.wechat.api.service.WXMessageService;
-import me.ruby.tea.wechat.api.support.*;
+import me.ruby.tea.wechat.api.support.AesException;
+import me.ruby.tea.wechat.api.support.SHA1;
+import me.ruby.tea.wechat.api.support.WXBizMsgCrypt;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +17,6 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
 
 import static me.ruby.tea.wechat.api.support.WXUtils.getWxBizMsgCryptInstance;
 
@@ -37,8 +33,8 @@ public class WXServiceAPI {
     @Autowired
     private WXMessageService wxMessageService;
 
-    @Autowired
-    private MerchantBindService merchantBindService;
+//    @Autowired
+//    private MerchantBindService merchantBindService;
 
     /**
      * 服务器地址验证
@@ -82,7 +78,7 @@ public class WXServiceAPI {
      * 微信公众号消息接收接口
      * @return
      */
-    @RequestMapping(value = "/api/wx", method = RequestMethod.POST)
+    @RequestMapping(value = "/api", method = RequestMethod.POST)
     public String receiver(@RequestBody String requestBody, @RequestParam(value = "timestamp") String timestamp,
                            @RequestParam(value = "nonce") String nonce, HttpServletRequest request) {
 
@@ -143,88 +139,88 @@ public class WXServiceAPI {
      * </xml>
      * @return
      */
-    @RequestMapping(value = "/api/wx/template/send", method = RequestMethod.POST)
-    public String sendTemplateMsg(@RequestBody TemplateMessage message, HttpServletRequest request) throws Exception{
-
-        //只允许内部IP调用
-        if (!IpUtils.isIpAllowed(request, Constants.WX_API_ALLOWED_IP))
-            throw new BusinessException("IP禁止访问！", "403");
-
-        //数据检验
-        //龊逼方案,比较理想的是jaxb结合schema完成校验
-        List<ErrorType> errors = new ArrayList<ErrorType>();
-
-        if (StringUtils.isBlank(message.getTouser())) {
-            errors.add(ErrorType.missing_param_touser);
-        }
-
-        if (StringUtils.isBlank(message.getTemplate())) {
-            errors.add(ErrorType.missing_param_template);
-        } else {
-            if (NotificationType.getTemplate(message.getTemplate()) == null)
-                errors.add(ErrorType.bad_param_template);
-        }
-
-        List<TemplateData> dataList = message.getItems();
-        if (dataList == null || dataList.size() == 0) {
-            errors.add(ErrorType.missing_param_data);
-        } else {
-            for(TemplateData item : dataList) {
-                if (StringUtils.isBlank(item.getMark()))
-                    errors.add(ErrorType.missing_param_mark);
-                if (StringUtils.isBlank(item.getValue()))
-                    errors.add(ErrorType.missing_param_value);
-            }
-        }
-
-        if (errors.size() != 0) {
-            ErrorType errorType = errors.get(0);
-            throw new BusinessException(errorType.getMessage(), errorType.getCode());
-        }
-
-        //调用模板通知发送服务
-        return wxMessageService.sendTemplateMessage(message);
-
-    }
+//    @RequestMapping(value = "/api/template/send", method = RequestMethod.POST)
+//    public String sendTemplateMsg(@RequestBody TemplateMessage message, HttpServletRequest request) throws Exception{
+//
+//        //只允许内部IP调用
+//        if (!IpUtils.isIpAllowed(request, Constants.WX_API_ALLOWED_IP))
+//            throw new BusinessException("IP禁止访问！", "403");
+//
+//        //数据检验
+//        //龊逼方案,比较理想的是jaxb结合schema完成校验
+//        List<ErrorType> errors = new ArrayList<ErrorType>();
+//
+//        if (StringUtils.isBlank(message.getTouser())) {
+//            errors.add(ErrorType.missing_param_touser);
+//        }
+//
+//        if (StringUtils.isBlank(message.getTemplate())) {
+//            errors.add(ErrorType.missing_param_template);
+//        } else {
+//            if (NotificationType.getTemplate(message.getTemplate()) == null)
+//                errors.add(ErrorType.bad_param_template);
+//        }
+//
+//        List<TemplateData> dataList = message.getItems();
+//        if (dataList == null || dataList.size() == 0) {
+//            errors.add(ErrorType.missing_param_data);
+//        } else {
+//            for(TemplateData item : dataList) {
+//                if (StringUtils.isBlank(item.getMark()))
+//                    errors.add(ErrorType.missing_param_mark);
+//                if (StringUtils.isBlank(item.getValue()))
+//                    errors.add(ErrorType.missing_param_value);
+//            }
+//        }
+//
+//        if (errors.size() != 0) {
+//            ErrorType errorType = errors.get(0);
+//            throw new BusinessException(errorType.getMessage(), errorType.getCode());
+//        }
+//
+//        //调用模板通知发送服务
+//        return wxMessageService.sendTemplateMessage(message);
+//
+//    }
 
     /**
      * 商户绑定接口
      * @return
      */
-    @RequestMapping(value = "/api/wx/user/bind", method = RequestMethod.POST)
-    public ApiRespData<String> userBind(HttpServletRequest request) throws Exception{
-
-        //数据校验
-        List<ErrorType> errors = new ArrayList<ErrorType>();
-
-        String loginId = request.getParameter("loginId");
-        if (StringUtils.isBlank(loginId)) {
-            errors.add(ErrorType.missing_param_loginId);
-        } else {
-            if (!Pattern.matches("^[a-zA-Z0-9_\\-@\\.]{6,30}$", loginId)) {
-                errors.add(ErrorType.bad_param_loginId);
-            }
-        }
-
-        String activeCode = request.getParameter("activeCode");
-        if (StringUtils.isBlank(activeCode))
-            errors.add(ErrorType.missing_param_activeCode);
-
-        String sendId = request.getParameter("sendID");
-        if (StringUtils.isBlank(sendId))
-            errors.add(ErrorType.missing_param_sendId);
-
-        if (errors.size() != 0) {
-            ErrorType errorType = errors.get(0);
-            throw new BusinessException(errorType.getMessage(), errorType.getCode());
-        }
-
-        WXBizMsgCrypt wxBizMsgCrypt = WXUtils.getWxBizMsgCryptInstance();
-        String openId = wxBizMsgCrypt.decryptParam(request.getParameter("data"));
-
-        //调用用户绑定服务
-        return merchantBindService.userBind(loginId, openId, sendId, activeCode);
-    }
+//    @RequestMapping(value = "/api/user/bind", method = RequestMethod.POST)
+//    public ApiRespData<String> userBind(HttpServletRequest request) throws Exception{
+//
+//        //数据校验
+//        List<ErrorType> errors = new ArrayList<ErrorType>();
+//
+//        String loginId = request.getParameter("loginId");
+//        if (StringUtils.isBlank(loginId)) {
+//            errors.add(ErrorType.missing_param_loginId);
+//        } else {
+//            if (!Pattern.matches("^[a-zA-Z0-9_\\-@\\.]{6,30}$", loginId)) {
+//                errors.add(ErrorType.bad_param_loginId);
+//            }
+//        }
+//
+//        String activeCode = request.getParameter("activeCode");
+//        if (StringUtils.isBlank(activeCode))
+//            errors.add(ErrorType.missing_param_activeCode);
+//
+//        String sendId = request.getParameter("sendID");
+//        if (StringUtils.isBlank(sendId))
+//            errors.add(ErrorType.missing_param_sendId);
+//
+//        if (errors.size() != 0) {
+//            ErrorType errorType = errors.get(0);
+//            throw new BusinessException(errorType.getMessage(), errorType.getCode());
+//        }
+//
+//        WXBizMsgCrypt wxBizMsgCrypt = WXUtils.getWxBizMsgCryptInstance();
+//        String openId = wxBizMsgCrypt.decryptParam(request.getParameter("data"));
+//
+//        //调用用户绑定服务
+//        return merchantBindService.userBind(loginId, openId, sendId, activeCode);
+//    }
 
     /**
      * Restful API 统一异常处理
