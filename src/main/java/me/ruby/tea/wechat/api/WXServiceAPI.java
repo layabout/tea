@@ -78,7 +78,7 @@ public class WXServiceAPI {
      * 微信公众号消息接收接口
      * @return
      */
-    @RequestMapping(value = "/api", method = RequestMethod.POST)
+    @RequestMapping(value = "/api", method = RequestMethod.POST, produces = {"application/xml;charset=UTF-8"})
     public String receiver(@RequestBody String requestBody, @RequestParam(value = "timestamp") String timestamp,
                            @RequestParam(value = "nonce") String nonce, HttpServletRequest request) throws Exception{
 

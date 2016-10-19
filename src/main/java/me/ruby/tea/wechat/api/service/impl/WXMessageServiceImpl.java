@@ -45,7 +45,13 @@ public class WXMessageServiceImpl extends BaseServceImpl implements WXMessageSer
     @Override
     public String replyTextMessage(String content) throws Exception {
 
-        String format = "<xml><ToUserName><![CDATA[%1$s]]></ToUserName><FromUserName><![CDATA[%2$s]]></FromUserName><CreateTime>%3$s</CreateTime><MsgType><![CDATA[%4$s]]></MsgType><Content><![CDATA[%5$s]]></Content></xml>";
+        String format = "<xml>\n"
+                + "<ToUserName><![CDATA[%1$s]]></ToUserName>\n"
+                + "<FromUserName><![CDATA[%2$s]]></FromUserName>\n"
+                + "<CreateTime>%3$s</CreateTime>\n"
+                + "<MsgType><![CDATA[%4$s]]></MsgType>\n"
+                + "<Content><![CDATA[%5$s]]></Content>\n"
+                + "</xml>";
 
         // 生成时间戳
         String timestamp = String.valueOf(System.currentTimeMillis());
