@@ -7,15 +7,15 @@
         </encoder>
     </appender>
 
-    <!--<appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-        <!--<File>mbp-portal.log</File>-->
-        <!--<encoder>-->
-            <!--<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
-        <!--</encoder>-->
-        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
-            <!--<fileNamePattern>mbp-portal.log.%d{.yyyy-MM-dd}</fileNamePattern>-->
-        <!--</rollingPolicy>-->
-    <!--</appender>-->
+    <appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>../logs/tea.log</File>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>../logs/tea.log.%d{.yyyy-MM-dd}</fileNamePattern>
+        </rollingPolicy>
+    </appender>
 
     <logger name="org.springframework" level="info" />
     <logger name="org.thymeleaf" level="info" />
@@ -23,6 +23,6 @@
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
-        <!--<appender-ref ref="logfile" />-->
+        <appender-ref ref="logfile" />
     </root>
 </configuration>
