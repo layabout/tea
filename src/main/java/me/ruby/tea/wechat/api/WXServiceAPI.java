@@ -43,7 +43,7 @@ public class WXServiceAPI {
      * @param nonce
      * @param echostr
      */
-    @RequestMapping("/api/wx")
+    @RequestMapping(value = "/api", method = RequestMethod.GET)
     public String index(@RequestParam(value="signature") String signature, @RequestParam(value = "timestamp") String timestamp,
                         @RequestParam(value = "nonce") String nonce, @RequestParam(value="echostr") String echostr) {
 
@@ -80,42 +80,49 @@ public class WXServiceAPI {
      */
     @RequestMapping(value = "/api", method = RequestMethod.POST)
     public String receiver(@RequestBody String requestBody, @RequestParam(value = "timestamp") String timestamp,
-                           @RequestParam(value = "nonce") String nonce, HttpServletRequest request) {
+                           @RequestParam(value = "nonce") String nonce, HttpServletRequest request) throws Exception{
+
+        logger.debug("AccessToken: {}", WXAccessTokenManager.getAccessToken());
 
         String encryptType = request.getParameter("encrypt_type");
+
+        String receiveXml = "";
+
         if (StringUtils.isBlank(encryptType) || encryptType.equals("raw")) {
 
             // 明文模式暂不处理
             logger.trace("明文模式");
-            return "success";
+            logger.trace("明文消息: {}", requestBody);
+            receiveXml = requestBody;
 
         } else {
 
             logger.trace("密文模式");
 
             try {
-
                 logger.trace("原始密文: {}", requestBody);
-
                 String msg_signature = request.getParameter("msg_signature");
-
                 logger.trace("接收参数[msg_signature={}, timestamp={}, nonce={}]", msg_signature, timestamp, nonce);
 
                 WXBizMsgCrypt msgCrypt = getWxBizMsgCryptInstance();
                 String decryptXml = msgCrypt.decryptMsg(msg_signature, timestamp, nonce, requestBody);
-
                 logger.trace("明文消息: {}", decryptXml);
-
-                logger.debug("AccessToken: {}", WXAccessTokenManager.getAccessToken());
-
-                //处理消息
-                return wxMessageService.processor(decryptXml);
+                receiveXml = decryptXml;
 
             } catch (Exception e) {
                 logger.error("消息解密错误！");
             }
         }
-        return "success";
+
+        //处理消息
+        if (StringUtils.isNotBlank(receiveXml)) {
+            if (StringUtils.isBlank(wxMessageService.getEncryptType())) {
+                wxMessageService.setEncryptType(encryptType);
+            }
+            return wxMessageService.processor(receiveXml);
+        }
+        else
+            return "success";
     }
 
     /**

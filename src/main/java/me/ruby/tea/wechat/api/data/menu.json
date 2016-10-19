@@ -1,72 +1,32 @@
 {
   "button": [
     {
-      "name": "商户自助",
-      "sub_button": [
-        {
-          "type": "click",
-          "name": "商户绑定",
-          "key": "BIND"
-        },
-        {
-          "type": "click",
-          "name": "解绑账号",
-          "key": "UNBIND"
-        },
-        // {
-        //     "type": "click",
-        //     "name": "商户后台登录",
-        //     "key": "LOGIN"
-        // },
-        {
-          "type": "view",
-          "name": "订单查询",
-          "url": "https://www.mobaopay.com/m/orderSearch"
-        }
-      ]
+      "name": "搜索",
+      "type": "view",
+      "url": "http://52sb.f3322.net/mobile/search"
     },
     {
-      "name": "摩宝产品",
-      "sub_button": [
-        {
-          "type": "view",
-          "name": "网银支付",
-          "url": "https://www.mobaopay.com/m/products/ebankPay"
-        },
-        {
-          "type": "view",
-          "name": "移动支付",
-          "url": "https://www.mobaopay.com/m/products/mobilePay"
-        },
-        {
-          "type": "view",
-          "name": "快捷支付",
-          "url": "https://www.mobaopay.com/m/products/quickPay"
-        },
-        {
-          "type": "view",
-          "name": "扫码支付",
-          "url": "https://www.mobaopay.com"
-        }
-      ]
+      "name": "精品推荐",
+      "type": "view",
+      "url": "http://52sb.f3322.net"
     },
     {
-      "name": "关于摩宝",
+      "name": "联系我们",
       "sub_button": [
         {
           "type": "view",
-          "name": "公司简介",
-          "url": "https://www.mobaopay.com/m/about"
+          "name": "商务合作",
+          "url": "http://52sb.f3322.net"
         },
         {
           "type": "view",
-          "name": "联系我们",
-          "url": "https://www.mobaopay.com/m/contact"
+          "name": "我要吐槽",
+          "url": "http://52sb.f3322.net"
         },
         {
           "type": "view",
-          "name": "公司公告",
-          "url": "https://www.mobaopay.com/m/pubInfo"
+          "name": "我要爆料",
+          "url": "http://52sb.f3322.net/mobile"
         }
       ]
     }

@@ -34,7 +34,7 @@ public class WXMessageServiceImpl extends BaseServceImpl implements WXMessageSer
     private MerchantBindService merchantBindService;
 
     //加密模式
-    public static String DECRYPT_TYPE = "aes";
+    private String encryptType = "";
 
     //接收方
     private static String TO_USER_NAME;
@@ -52,7 +52,7 @@ public class WXMessageServiceImpl extends BaseServceImpl implements WXMessageSer
 
         String replyXml = String.format(format, TO_USER_NAME, FROM_USER_NAME, timestamp, "text", content);
 
-        if (DECRYPT_TYPE.equals("aes")) {
+        if (StringUtils.isNotBlank(getEncryptType()) && getEncryptType().equals("aes")) {
 
             //生成随机数
             String nonce = WXUtils.getRandomNum(9);
@@ -160,7 +160,7 @@ public class WXMessageServiceImpl extends BaseServceImpl implements WXMessageSer
 
             WXReceiveText message = WXUtils.convertToBean(receiveXml, WXReceiveText.class);
 
-            String  content = "";
+            String  content;
 
             if (message.getContent().contains("你好"))
                 content = "您好！";
@@ -247,5 +247,15 @@ public class WXMessageServiceImpl extends BaseServceImpl implements WXMessageSer
 
         }
         return "success";
+    }
+
+    @Override
+    public void setEncryptType(String type) {
+        this.encryptType = type;
+    }
+
+    @Override
+    public String getEncryptType() {
+        return this.encryptType;
     }
 }

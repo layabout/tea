@@ -8,12 +8,12 @@
     </appender>
 
     <appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>../logs/tea.log</File>
+        <File>tea.log</File>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>../logs/tea.log.%d{.yyyy-MM-dd}</fileNamePattern>
+            <fileNamePattern>tea.log.%d{.yyyy-MM-dd}</fileNamePattern>
         </rollingPolicy>
     </appender>
 

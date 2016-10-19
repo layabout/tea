@@ -9,6 +9,7 @@ import me.ruby.tea.wechat.api.dto.TemplateMessage;
  */
 public interface WXMessageService extends BaseService {
 
+
     /**
      * 回复文本消息
      * @param content 内容
@@ -29,5 +30,16 @@ public interface WXMessageService extends BaseService {
      * @throws Exception
      */
     String processor(String receiveXml) throws Exception;
+
+    /**
+     * 设置加密方式
+     */
+    void setEncryptType(String type);
+
+    /**
+     * 获取加密方式
+     * @return
+     */
+    String getEncryptType();
 
 }
