@@ -32,4 +32,12 @@ public interface BaseService {
      */
     String sendPost(String data, String url) throws Exception;
 
+    /**
+     * 发送get请求
+     * @param url
+     * @return
+     * @throws Exception
+     */
+    String sendGet(String url) throws Exception;
+
 }
