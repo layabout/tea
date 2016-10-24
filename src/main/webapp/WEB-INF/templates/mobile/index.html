@@ -6,6 +6,13 @@
     <title>WeUI</title>
 </head>
 <body>
-<label>姓名：<input type="text" th:text="${nickname}"></label>
+<img style="width: 46px; height: 46px;" th:src="${user.headimgurl}" />
+<hr/>
+<label>openid：<input type="text" th:value="${user.openid}" /></label>
+<label>nickname：<input type="text" th:value="${user.nickname}" /></label>
+<label>sex：<input type="text" th:value="${user.sex}" /></label>
+<label>province：<input type="text" th:value="${user.province}" /></label>
+<label>city：<input type="text" th:value="${user.city}" /></label>
+<label>country：<input type="text" th:value="${user.country}" /></label>
 </body>
 </html>

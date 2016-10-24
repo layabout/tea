@@ -39,10 +39,15 @@ public class MobileController {
                 String accessToken = m.get("access_token").toString();
                 String openid = m.get("openid").toString();
                 WXUserInfo userInfo = wxoAuthService.getUserInfo(accessToken, openid);
-                model.addAttribute("nickname", userInfo.getNickname());
+                model.addAttribute("user", userInfo);
             }
         }
 
         return "mobile/index";
+    }
+
+    @RequestMapping("/mobile/merchant")
+    public String merchant() {
+        return "mobile/merchant";
     }
 }
