@@ -49,7 +49,7 @@
         </property>
         <property name="packagesToScan">
             <list>
-                <value>me.ruby.tea.entity</value>
+                <value>me.ruby.**.entity</value>
             </list>
         </property>
     </bean>
