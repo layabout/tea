@@ -1,4 +1,4 @@
-package me.ruby.tea;
+package me.ruby.common;
 
 import me.ruby.common.configuration.ConfigurableConstants;
 

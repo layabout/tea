@@ -2,7 +2,7 @@ package me.ruby.wechat.controller.api;
 
 import com.google.common.base.Throwables;
 import me.ruby.common.exception.BusinessException;
-import me.ruby.tea.Constants;
+import me.ruby.common.Constants;
 import me.ruby.wechat.dto.ApiRespData;
 import me.ruby.wechat.manager.WXAccessTokenManager;
 import me.ruby.wechat.service.WXMessageService;

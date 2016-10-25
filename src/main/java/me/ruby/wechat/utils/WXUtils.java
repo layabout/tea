@@ -1,6 +1,6 @@
 package me.ruby.wechat.utils;
 
-import me.ruby.tea.Constants;
+import me.ruby.common.Constants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
