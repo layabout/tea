@@ -1,4 +1,4 @@
-package me.ruby.common;
+package me.ruby;
 
 import me.ruby.common.configuration.ConfigurableConstants;
 

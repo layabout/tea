@@ -3,7 +3,7 @@ package me.ruby.wechat.service.impl;
 import com.alibaba.fastjson.JSON;
 import me.ruby.common.exception.BusinessException;
 import me.ruby.common.service.impl.BaseServceImpl;
-import me.ruby.common.Constants;
+import me.ruby.Constants;
 import me.ruby.wechat.dto.WXUserInfo;
 import me.ruby.wechat.service.WXOAuthService;
 import org.slf4j.Logger;
