@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <!-- 设置为close使Spring容器关闭同时数据源能够正常关闭，以免造成连接泄露 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="jdbc:mysql://localhost:3306/test" />
+        <property name="username" value="test" />
+        <property name="password" value="42344163lyf" />
+        <property name="connectionProperties" value="com.mysql.jdbc.Driver" />
+        <property name="initialSize" value="2" />
+        <property name="minIdle" value="2" />
+        <property name="maxActive" value="20" />
+        <property name="maxWait" value="60000" />
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+        <property name="minEvictableIdleTimeMillis" value="3000000" />
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+
+        <property name="poolPreparedStatements" value="false" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+
+        <property name="filters" value="stat, wall" />
+    </bean>
+
+    <!-- 配置会话工厂-->
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource">
+            <ref bean="dataSource" />
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <!-- MySQL的方言 -->
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="javax.persistence.validation.mode">none</prop>
+                <!-- 必要时在数据库新建所有表格 -->
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <!-- 配置current session的上下文环境，方便我们调用sessionFactory获取当前线程统一个session对象 -->
+                <prop key="current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</prop>
+                <!-- 格式化sql语句-->
+                 <prop key="hibernate.format_sql">true</prop>
+            </props>
+        </property>
+        <property name="packagesToScan">
+            <list>
+                <value>me.ruby.**.entity</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Hibernate Transaction Manager -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+</beans>

@@ -4,12 +4,13 @@
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-4.2.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+        http://www.springframework.org/schema/context/spring-context-4.2.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!-- **************************************************************** -->
     <!--  RESOURCE FOLDERS CONFIGURATION                                  -->
@@ -33,7 +34,7 @@
     </mvc:annotation-driven>
 
     <!-- Scan Components -->
-    <context:component-scan base-package="me.ruby.tea"/>
+    <context:component-scan base-package="me.ruby.**.controller"/>
 
     <!-- Enable Spring AOP, Use Cglib -->
     <aop:aspectj-autoproxy proxy-target-class="true" />
@@ -70,6 +71,9 @@
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
         <property name="validationMessageSource" ref="messageSource" />
     </bean>
+
+    <!-- Sets annotation-driven transactions -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
 
     <!-- **************************************************************** -->
     <!--  THYMELEAF-SPECIFIC ARTIFACTS                                    -->
